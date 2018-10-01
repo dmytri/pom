@@ -1,0 +1,103 @@
+#!/bin/bash
+
+#
+# CONFIG
+#
+
+POMTIME=1500
+POMBREAK=180
+
+POMFILE=/tmp/.pom
+
+#
+# SHOW CURRENT POM IF ANY ARGS
+#
+
+if [ ! -z "$1" ]; then
+  [ -f "$POMFILE" ] \
+    && cat "$POMFILE" \
+    || echo ""
+  exit
+fi
+
+#
+# EXIT IF OTHER POM RUNNDING
+#
+
+if [ -f "$POMFILE" ]; then
+  pkill -SIGSTP pom
+  exit
+fi
+
+#
+# WRITE POM TO FILE
+#
+
+function setPom {
+  if [ -z "$1" ]; then
+    [ -f $POMFILE ] && rm "$POMFILE"
+  else
+    echo "$1" > "$POMFILE"
+  fi
+  pkill -SIGRTMIN+10 i3blocks
+}
+
+#
+# HOOK TERMINATE SIGNALS
+#
+
+function terminate {
+  setPom ''
+  exit
+}
+
+trap terminate INT
+trap terminate TERM
+trap terminate EXIT
+
+#
+# GET TASK
+#
+
+
+TASK=$(zenity --entry --text "task") 
+[[ $? = 0 ]] || terminate
+
+#
+# ASK IF STILL WORKING
+#
+
+function check {
+  zenity --width=220 --question \
+    --text="Still working on $TASK?"
+  [[ $? = 0 ]] || terminate
+}
+
+trap check TSTP
+
+#
+# POMODORO TIMER
+#
+
+function doPom {
+  POM=$1
+  while [ "$POM" -gt '0' ]; do
+    setPom "$POM $2"
+    sleep 1
+    POM=$((POM - 1))
+  done
+  setPom 'DONE'
+}
+
+#
+# MAIN
+#
+
+while true; do
+  doPom "$POMTIME" "$TASK"
+  setPom "TIME UP: $TASK"
+  notify-send "TIME UP: $TASK"
+  doPom "$POMBREAK" 'BREAK'
+  check
+done
+
