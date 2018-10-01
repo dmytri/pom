@@ -17,7 +17,6 @@ separator=true
 
 ```
 bindsym $mod+period exec --no-startup-id /path/to/pom
-bindsym $mod+Shift+period exec --no-startup-id /path/to/pom pause
 ```
 
 # DEPENDENCIES

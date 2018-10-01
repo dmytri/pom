@@ -33,7 +33,7 @@ fi
 #
 
 if [ -f "$POMFILE" ]; then
-  pkill -SIGSTP pom
+  pkill -SIGTSTP pom
   exit
 fi
 
