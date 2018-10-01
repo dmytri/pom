@@ -10,18 +10,26 @@ POMBREAK=180
 POMFILE=/tmp/.pom
 
 #
-# SHOW CURRENT POM IF ANY ARGS
+# PROCESS ARGS
 #
 
 if [ ! -z "$1" ]; then
-  [ -f "$POMFILE" ] \
-    && cat "$POMFILE" \
-    || echo ""
-  exit
+  case $1 in
+    "pause")
+      pkill -SIGTSTP pom
+      exit
+    ;;
+    "show")
+      [ -f "$POMFILE" ] \
+        && cat "$POMFILE" \
+        || echo ""
+      exit
+    ;;
+  esac
 fi
 
 #
-# EXIT IF OTHER POM RUNNDING
+# EXIT IF OTHER POM RUNNING
 #
 
 if [ -f "$POMFILE" ]; then
