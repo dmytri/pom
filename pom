@@ -14,7 +14,7 @@ POMFILE=/tmp/.pom
 #
 
 if [ ! -z "$1" ]; then
-  case $1 in
+  case "$1" in
     "pause")
       pkill -SIGTSTP pom
       exit
@@ -69,7 +69,7 @@ trap terminate EXIT
 
 
 TASK=$(zenity --entry --text "task") 
-[[ $? = 0 ]] || terminate
+[[ "$?" = 0 ]] || terminate
 
 #
 # ASK IF STILL WORKING
