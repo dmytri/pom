@@ -43,7 +43,7 @@ fi
 
 function setPom {
   if [ -z "$1" ]; then
-    [ -f $POMFILE ] && rm "$POMFILE"
+    [ -f "$POMFILE" ] && rm "$POMFILE"
   else
     echo "$1" > "$POMFILE"
   fi
@@ -68,8 +68,7 @@ trap terminate EXIT
 #
 
 
-TASK=$(zenity --entry --text "task") 
-[[ "$?" = 0 ]] || terminate
+TASK=$(zenity --entry --text "task") || terminate
 
 #
 # ASK IF STILL WORKING
@@ -77,8 +76,8 @@ TASK=$(zenity --entry --text "task")
 
 function check {
   zenity --width=220 --question \
-    --text="Still working on $TASK?"
-  [[ $? = 0 ]] || terminate
+    --text="Still working on $TASK?" \
+  || terminate
 }
 
 trap check TSTP
@@ -104,7 +103,7 @@ function doPom {
 while true; do
   doPom "$POMTIME" "$TASK"
   setPom "TIME UP: $TASK"
-  notify-send "TIME UP: $TASK"
+  zenity --notification --text "TIME UP: $TASK"
   doPom "$POMBREAK" 'BREAK'
   check
 done
