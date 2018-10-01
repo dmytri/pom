@@ -1,6 +1,6 @@
 # POM
 
-simple i3 friendly bash pomodro
+simple i3 friendly bash pomodoro timer
 
 ## example .i3blocks
 
