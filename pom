@@ -59,8 +59,6 @@ function terminate {
   exit
 }
 
-trap terminate INT
-trap terminate TERM
 trap terminate EXIT
 
 #
